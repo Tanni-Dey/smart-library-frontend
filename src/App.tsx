@@ -1,37 +1,38 @@
+import { useEffect } from "react";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Notfound from "./pages/Notfound";
-import { RouterProvider } from "react-router-dom";
+import { Outlet, RouterProvider } from "react-router-dom";
 import { createBrowserRouter } from "react-router-dom";
 import Header from "./components/Header";
+import { useAppDispatch } from "./redux/hooks";
+import { onAuthStateChanged } from "firebase/auth";
+import { setUser } from "./redux/features/user/UserSlice";
+import { auth } from "./lib/firebase";
 
 function App() {
-  // const router = createBrowserRouter([
-  //   {
-  //     path: "/",
-  //     element: <Home />,
-  //   },
-  //   {
-  //     path: "/signup",
-  //     element: <Signup />,
-  //   },
-  //   {
-  //     path: "/login",
-  //     element: <Login />,
-  //   },
-  //   {
-  //     path: "*",
-  //     element: <Notfound />,
-  //   },
-  // ]);
+  const dispatch = useAppDispatch();
 
+  useEffect(() => {
+    // dispatch(setLoading(true));
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // dispatch(setLoading(false));
+        dispatch(setUser(user.email));
+      } else {
+        // dispatch(setLoading(false));
+      }
+    });
+  }, [dispatch]);
   return (
-    <>
+    <div className="mx-20">
       <Header />
-      {/* <RouterProvider router={router} /> 
-      {/* <h3>app</h3> */}
-    </>
+      <div className="pt-16">
+        <Outlet />
+      </div>
+    </div>
   );
 }
 
