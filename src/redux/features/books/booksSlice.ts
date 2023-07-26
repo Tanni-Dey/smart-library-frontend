@@ -15,6 +15,9 @@ const booksSlice = createSlice({
     setSearch: (state, action: PayloadAction<string>) => {
       state.searchText = action.payload;
     },
+    // setGenreAndYearSearch:(state,action:PayloadAction<string>)=>{
+
+    // }
   },
 });
 

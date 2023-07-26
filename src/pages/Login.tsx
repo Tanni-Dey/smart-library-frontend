@@ -1,7 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable prefer-const */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { loginUser } from "../redux/features/user/UserSlice";
 
 interface ILoginInput {
@@ -11,7 +15,11 @@ interface ILoginInput {
 
 const Login = () => {
   const dispatch = useAppDispatch();
-  const { error, isError } = useAppSelector((state) => state.user);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const { user, error, isError } = useAppSelector((state) => state.user);
+  let from = location?.state?.from?.pathname || "/";
   const {
     register,
     handleSubmit,
@@ -21,7 +29,9 @@ const Login = () => {
   const onSubmit: SubmitHandler<ILoginInput> = async (data) => {
     await dispatch(loginUser({ email: data.email, password: data.password }));
   };
-
+  if (user.email) {
+    navigate(from, { replace: true });
+  }
   return (
     <div className="flex justify-center items-center">
       <div className="p-10 rounded shadow-2xl md:w-1/3">
