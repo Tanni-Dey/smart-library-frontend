@@ -16,7 +16,10 @@ const Books = () => {
   const dispatch = useAppDispatch();
   const { searchText } = useAppSelector((state) => state.search);
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const { data } = useGetAllBooksQuery(undefined);
+  const { data } = useGetAllBooksQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+    pollingInterval: 30000,
+  });
 
   let books: IData[] | undefined = [];
   if (searchText !== "") {

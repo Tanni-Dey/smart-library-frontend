@@ -7,6 +7,7 @@ import Notfound from "../pages/Notfound";
 import Books from "../components/Books";
 import AddNewBook from "../pages/AddNewBook";
 import ProtectedRoute from "./ProtectedRoute";
+import SingleBookDetails from "../pages/SingleBookDetails";
 
 const router = createBrowserRouter([
   {
@@ -34,6 +35,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <AddNewBook />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/book-details/:id",
+        element: (
+          <ProtectedRoute>
+            <SingleBookDetails />
           </ProtectedRoute>
         ),
       },
