@@ -4,14 +4,14 @@ export const ApiSlice = createApi({
   reducerPath: "books",
   baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:5000" }),
   endpoints: (builder) => ({
-    getAllBooks: builder.query<IResponse[], undefined>({
+    getAllBooks: builder.query<IResponse, undefined>({
       query: () => "/books",
       providesTags: [],
     }),
     getSingleBook: builder.query({
-      query: (id) => `/book-details/${id}`,
+      query: (id: string) => `/book-details/${id}`,
     }),
-    postAddBook: builder.mutation<IResponse, undefined>({
+    postAddBook: builder.mutation({
       query: (data) => ({
         url: "/add-book",
         method: "POST",
@@ -20,6 +20,19 @@ export const ApiSlice = createApi({
       }),
       invalidatesTags: [],
     }),
+    addReview: builder.mutation({
+      query: ({ id, data }: { id: string; data: { reviews: string } }) => ({
+        url: `/add-review/${id}`,
+        method: "PUT",
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        body: data,
+      }),
+      // invalidatesTags: ["reviews"],
+    }),
+    getReviews: builder.query({
+      query: (id: string) => `/reviews/${id}`,
+      // providesTags: ["reviews"],
+    }),
   }),
 });
 
@@ -27,4 +40,6 @@ export const {
   useGetAllBooksQuery,
   useGetSingleBookQuery,
   usePostAddBookMutation,
+  useAddReviewMutation,
+  useGetReviewsQuery,
 } = ApiSlice;
