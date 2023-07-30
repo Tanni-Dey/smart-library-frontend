@@ -22,11 +22,13 @@ const Books = () => {
   });
 
   let books: IData[] | undefined = [];
+
   if (searchText !== "") {
     const titleSearchData = data?.data.filter(
       (singleBook) =>
         singleBook.title.toLowerCase() === searchText.toLowerCase()
     );
+
     const genreSearchData = data?.data.filter(
       (singleBook) =>
         singleBook.genre.toLowerCase() === searchText.toLowerCase()

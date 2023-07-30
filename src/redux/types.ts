@@ -19,7 +19,7 @@ export interface IData {
   author: string;
   genre: string;
   publicationDate: string;
-  review?: string[];
+  reviews?: string[];
 }
 export interface IResponse {
   sucess: boolean;

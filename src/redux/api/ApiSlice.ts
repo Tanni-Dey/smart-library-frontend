@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { IResponse } from "../types";
+import { IData, IResponse } from "../types";
 export const ApiSlice = createApi({
   reducerPath: "books",
   baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:5000" }),
@@ -12,10 +12,9 @@ export const ApiSlice = createApi({
       query: (id: string) => `/book-details/${id}`,
     }),
     postAddBook: builder.mutation({
-      query: (data) => ({
+      query: (data: IData) => ({
         url: "/add-book",
         method: "POST",
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         body: data,
       }),
       invalidatesTags: [],
@@ -33,6 +32,14 @@ export const ApiSlice = createApi({
       query: (id: string) => `/reviews/${id}`,
       // providesTags: ["reviews"],
     }),
+    editBook: builder.mutation({
+      query: ({ id, data }: { id: string; data: IData }) => ({
+        url: `/edit-book/${id}`,
+        method: "PUT",
+        body: data,
+      }),
+      // invalidatesTags: ["reviews"],
+    }),
   }),
 });
 
@@ -42,4 +49,5 @@ export const {
   usePostAddBookMutation,
   useAddReviewMutation,
   useGetReviewsQuery,
+  useEditBookMutation,
 } = ApiSlice;

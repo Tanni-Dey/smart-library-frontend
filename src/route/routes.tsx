@@ -8,6 +8,7 @@ import Books from "../components/Books";
 import AddNewBook from "../pages/AddNewBook";
 import ProtectedRoute from "./ProtectedRoute";
 import SingleBookDetails from "../pages/SingleBookDetails";
+import EditBook from "../pages/EditBook";
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <AddNewBook />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/edit-book/:id",
+        element: (
+          <ProtectedRoute>
+            <EditBook />
           </ProtectedRoute>
         ),
       },
