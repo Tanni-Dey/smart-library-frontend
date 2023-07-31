@@ -4,6 +4,7 @@ import {
   useEditBookMutation,
   useGetSingleBookQuery,
 } from "../redux/api/ApiSlice";
+import Swal from "sweetalert2";
 
 interface IBookInput {
   title: string;
@@ -15,7 +16,10 @@ interface IBookInput {
 
 const EditBook = () => {
   const { id } = useParams();
-  const { data } = useGetSingleBookQuery(id);
+  const { data } = useGetSingleBookQuery(id, {
+    refetchOnFocus: true,
+    pollingInterval: 3000,
+  });
   const [editBook] = useEditBookMutation();
   const book = data?.data;
 
@@ -27,9 +31,21 @@ const EditBook = () => {
   } = useForm<IBookInput>();
 
   const onSubmit: SubmitHandler<IBookInput> = async (editedBook) => {
-    console.log(editedBook);
     const editData = await editBook({ id: id, data: editedBook });
-    console.log(editedBook);
+    console.log(editData);
+    if (editData?.data?.data?.acknowledged) {
+      void Swal.fire({
+        title: "Book Edited",
+        icon: "success",
+      });
+    } else {
+      void Swal.fire({
+        title: "Something went Wrong. Book Not Edited",
+        icon: "error",
+        confirmButtonText: "Try Again",
+      });
+    }
+
     reset();
   };
 

@@ -1,6 +1,7 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   useAddReviewMutation,
+  useDeleteBookMutation,
   useGetReviewsQuery,
   useGetSingleBookQuery,
 } from "../redux/api/ApiSlice";
@@ -8,6 +9,7 @@ import {
 import bookImg from "../assets/images/book1.avif";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useAppSelector } from "../redux/hooks";
+import Swal from "sweetalert2";
 
 interface IReview {
   review: string;
@@ -17,11 +19,13 @@ const SingleBookDetails = () => {
   const { id } = useParams();
   const { user } = useAppSelector((state) => state.user);
   const { data } = useGetSingleBookQuery(id);
+  const [deleteBook] = useDeleteBookMutation();
   const { data: bookReview } = useGetReviewsQuery(id, {
     refetchOnFocus: true,
     pollingInterval: 3000,
   });
   const [addReview] = useAddReviewMutation();
+  const navigate = useNavigate();
   const book = data?.data;
   const {
     register,
@@ -33,6 +37,35 @@ const SingleBookDetails = () => {
   const onSubmit: SubmitHandler<IReview> = async (newReview) => {
     await addReview({ id: id, data: { reviews: newReview.review } });
     reset();
+  };
+
+  const handleDelete = () => {
+    void Swal.fire({
+      title: "Do you want Delete the Book?",
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      denyButtonText: "No",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const deleteData = await deleteBook(id);
+        if (deleteData?.data?.data?.acknowledged) {
+          void Swal.fire({
+            title: "Book Deleted",
+            icon: "success",
+          });
+          navigate("/");
+        } else {
+          void Swal.fire({
+            title: "Something went Wrong. Book Not Deleted",
+            icon: "error",
+            confirmButtonText: "Try Again",
+          });
+        }
+      } else if (result.isDenied) {
+        Swal.fire("Changes are not saved", "", "info");
+      }
+    });
   };
 
   return (
@@ -61,7 +94,10 @@ const SingleBookDetails = () => {
             >
               Edit the book
             </Link>
-            <button className="ml-5 bg-red-400 rounded p-3 text-white font-bold hover:bg-red-300 focus:outline-0 focus:bg-red-500">
+            <button
+              onClick={handleDelete}
+              className="ml-5 bg-red-400 rounded p-3 text-white font-bold hover:bg-red-300 focus:outline-0 focus:bg-red-500"
+            >
               Delete the book
             </button>
           </div>
