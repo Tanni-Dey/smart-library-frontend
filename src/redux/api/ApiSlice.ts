@@ -45,6 +45,19 @@ export const ApiSlice = createApi({
         method: "DELETE",
       }),
     }),
+    addToWishlist: builder.mutation({
+      query: ({
+        id,
+        data,
+      }: {
+        id: string;
+        data: { wishlist: string | null };
+      }) => ({
+        url: `/add-to-wishlist/${id}`,
+        method: "PUT",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -56,4 +69,5 @@ export const {
   useGetReviewsQuery,
   useEditBookMutation,
   useDeleteBookMutation,
+  useAddToWishlistMutation,
 } = ApiSlice;
