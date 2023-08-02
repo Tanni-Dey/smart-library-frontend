@@ -9,6 +9,7 @@ import AddNewBook from "../pages/AddNewBook";
 import ProtectedRoute from "./ProtectedRoute";
 import SingleBookDetails from "../pages/SingleBookDetails";
 import EditBook from "../pages/EditBook";
+import MyWishlist from "../pages/MyWishlist";
 
 const router = createBrowserRouter([
   {
@@ -52,6 +53,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <SingleBookDetails />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/my-wishlist",
+        element: (
+          <ProtectedRoute>
+            <MyWishlist />
           </ProtectedRoute>
         ),
       },

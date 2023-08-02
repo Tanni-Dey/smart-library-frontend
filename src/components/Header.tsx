@@ -6,6 +6,7 @@ import { setSearch } from "../redux/features/books/booksSlice";
 import { signOut } from "firebase/auth";
 import { auth } from "../lib/firebase";
 import { setUser } from "../redux/features/user/UserSlice";
+import { useGetMyWishlistBooksQuery } from "../redux/api/ApiSlice";
 
 interface ISearch {
   search: string;
@@ -13,6 +14,10 @@ interface ISearch {
 const Header = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
+  const { data } = useGetMyWishlistBooksQuery(user.email, {
+    refetchOnFocus: true,
+    pollingInterval: 3000,
+  });
 
   const {
     register,
@@ -57,6 +62,14 @@ const Header = () => {
               {user.email && (
                 <li className="m-3">
                   <Link to="/add-new-book">Add New Book</Link>
+                </li>
+              )}
+              {user.email && (
+                <li className="m-3 relative inline-block">
+                  <Link to="/my-wishlist">My Wishlist </Link>
+                  <div className="absolute bg-gray-800 text-white p-1 text-sm rounded-full shadow-md transition-opacity duration-300 ease-in-out bottom-3/4 left-full transform -translate-x-1/2">
+                    {data.data.length}
+                  </div>
                 </li>
               )}
               <li className="m-3">

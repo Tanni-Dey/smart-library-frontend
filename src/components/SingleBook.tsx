@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 import { IData } from "../redux/types";
 import bookImg from "../assets/images/book1.avif";
 import { Link } from "react-router-dom";
@@ -21,7 +25,7 @@ const SingleBook = ({ book }: IProps) => {
   });
 
   const iswishlisted = data?.data?.wishlist?.find(
-    (singleUser) => user?.email === singleUser
+    (singleUser: string | null) => user?.email === singleUser
   );
 
   const handleAddToWishlist = async () => {

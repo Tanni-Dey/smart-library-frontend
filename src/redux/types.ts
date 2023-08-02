@@ -20,6 +20,7 @@ export interface IData {
   genre: string;
   publicationDate: string;
   reviews?: string[];
+  wishlist?: string[];
 }
 export interface IResponse {
   sucess: boolean;
