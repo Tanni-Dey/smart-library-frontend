@@ -29,6 +29,9 @@ const MyWishlist = () => {
             <p className="text-gray-600 text-semibold capitalize">
               Written by {book.author}. This book is {book.genre}
             </p>
+            <button className="bg-teal-400 rounded p-2 text-white font-semibold text-sm hover:bg-teal-300 focus:outline-0 focus:bg-teal-500 mt-2">
+              Read Complete
+            </button>
           </div>
         </div>
       ))}
