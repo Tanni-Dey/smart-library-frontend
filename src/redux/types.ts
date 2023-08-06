@@ -21,6 +21,7 @@ export interface IData {
   publicationDate: string;
   reviews?: string[];
   wishlist?: string[];
+  readCompleted?: string[];
 }
 export interface IResponse {
   sucess: boolean;

@@ -7,6 +7,7 @@ import bookImg from "../assets/images/book1.avif";
 import { Link } from "react-router-dom";
 import { FcLike, FcLikePlaceholder } from "react-icons/fc";
 import {
+  useAddToReadCompletedMutation,
   useAddToWishlistMutation,
   useGetSingleBookQuery,
 } from "../redux/api/ApiSlice";
@@ -23,6 +24,18 @@ const SingleBook = ({ book }: IProps) => {
     refetchOnFocus: true,
     pollingInterval: 3000,
   });
+  const [addToReadCompleted] = useAddToReadCompletedMutation();
+
+  const handleAddToReadCompleted = async () => {
+    await addToReadCompleted({
+      id: _id,
+      data: { readCompleted: user.email },
+    });
+  };
+
+  const isReadCompleted = book?.readCompleted?.find(
+    (singleUser: string | null) => user?.email === singleUser
+  );
 
   const iswishlisted = data?.data?.wishlist?.find(
     (singleUser: string | null) => user?.email === singleUser
@@ -54,9 +67,21 @@ const SingleBook = ({ book }: IProps) => {
               <FcLikePlaceholder />
             </button>
           )}
-          <button className="bg-teal-400 rounded p-2 text-white font-semibold text-sm hover:bg-teal-300 focus:outline-0 focus:bg-teal-500">
-            Read Complete
-          </button>
+          {isReadCompleted === user.email ? (
+            <button
+              disabled
+              className="bg-gray-300 rounded p-2 text-white font-semibold text-sm  focus:outline-0 focus:bg-gray-300 mt-2"
+            >
+              Read Complete
+            </button>
+          ) : (
+            <button
+              onClick={handleAddToReadCompleted}
+              className="bg-teal-400 rounded p-2 text-white font-semibold text-sm hover:bg-teal-300 focus:outline-0 focus:bg-teal-500"
+            >
+              Read Complete
+            </button>
+          )}
         </div>
       )}
     </div>

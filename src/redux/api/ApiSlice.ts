@@ -58,16 +58,21 @@ export const ApiSlice = createApi({
         body: data,
       }),
     }),
-    // getMyWishlistBooks: builder.query({
-    //   query: (data: { email: string }) => ({
-    //     url: "/my-wishlist",
-    //     method: "GET",
-    //     body: data,
-    //   }),
-    // providesTags: [],
-    // }),
     getMyWishlistBooks: builder.query({
       query: (email: string) => `/my-wishlist/${email}`,
+    }),
+    addToReadCompleted: builder.mutation({
+      query: ({
+        id,
+        data,
+      }: {
+        id: string;
+        data: { readCompleted: string | null };
+      }) => ({
+        url: `/add-read-complete/${id}`,
+        method: "PUT",
+        body: data,
+      }),
     }),
   }),
 });
@@ -82,4 +87,5 @@ export const {
   useDeleteBookMutation,
   useAddToWishlistMutation,
   useGetMyWishlistBooksQuery,
+  useAddToReadCompletedMutation,
 } = ApiSlice;
