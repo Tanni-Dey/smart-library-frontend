@@ -55,7 +55,10 @@ const Books = () => {
     books = data?.data;
   }
   // console.log([...books].reverse());
-  // const allBooks = [...books].reverse();
+  let allBooks: IData[] = [];
+  if (books !== undefined) {
+    allBooks = [...books].reverse();
+  }
 
   const {
     register,
@@ -103,7 +106,7 @@ const Books = () => {
       <div className="col-span-10">
         <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
           {books?.length !== 0 ? (
-            books?.map((book) => <SingleBook key={book._id} book={book} />)
+            allBooks?.map((book) => <SingleBook key={book._id} book={book} />)
           ) : (
             <h3 className="text-red-600 font-bold text-2xl text-center">
               Book doesn't exist
