@@ -68,7 +68,7 @@ const Header = () => {
                 <li className="m-3 relative inline-block">
                   <Link to="/my-wishlist">My Wishlist </Link>
                   <div className="absolute bg-gray-800 text-white h-6 items-center flex justify-center w-6 font-semibold text-sm rounded-full shadow-md transition-opacity duration-300 ease-in-out bottom-2/3 left-full transform -translate-x-1/2">
-                    {data.data.length}
+                    {data?.data.length}
                   </div>
                 </li>
               )}

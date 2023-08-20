@@ -26,20 +26,20 @@ const Books = () => {
   if (searchText !== "") {
     const titleSearchData = data?.data.filter(
       (singleBook) =>
-        singleBook.title.toLowerCase() === searchText.toLowerCase()
+        singleBook.title?.toLowerCase() === searchText.toLowerCase()
     );
 
     const genreSearchData = data?.data.filter(
       (singleBook) =>
-        singleBook.genre.toLowerCase() === searchText.toLowerCase()
+        singleBook.genre?.toLowerCase() === searchText.toLowerCase()
     );
     const authorSearchData = data?.data.filter(
       (singleBook) =>
-        singleBook.author.toLowerCase() === searchText.toLowerCase()
+        singleBook.author?.toLowerCase() === searchText.toLowerCase()
     );
     const dateSearchData = data?.data.filter(
       (singleBook) =>
-        singleBook.publicationDate.toLowerCase() === searchText.toLowerCase()
+        singleBook.publicationDate?.toLowerCase() === searchText.toLowerCase()
     );
 
     if (titleSearchData?.length !== 0) {
@@ -54,6 +54,8 @@ const Books = () => {
   } else {
     books = data?.data;
   }
+  // console.log([...books].reverse());
+  // const allBooks = [...books].reverse();
 
   const {
     register,
