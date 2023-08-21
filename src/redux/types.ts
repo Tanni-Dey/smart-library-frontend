@@ -27,3 +27,8 @@ export interface IResponse {
   sucess: boolean;
   data: IData[];
 }
+
+export interface IGenreYearInput {
+  genreSelect: string;
+  yearSelect: string;
+}

@@ -2,7 +2,10 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { setSearch } from "../redux/features/books/booksSlice";
+import {
+  setGenreAndYearSearch,
+  setSearch,
+} from "../redux/features/books/booksSlice";
 import { signOut } from "firebase/auth";
 import { auth } from "../lib/firebase";
 import { setUser } from "../redux/features/user/UserSlice";
@@ -22,11 +25,15 @@ const Header = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<ISearch>();
 
   const onSubmit: SubmitHandler<ISearch> = (data): void => {
+    console.log(data);
     dispatch(setSearch(data.search));
+    dispatch(setGenreAndYearSearch({ genreSelect: "", yearSelect: "" }));
+    reset();
   };
   const handleSingout = async () => {
     await signOut(auth);

@@ -3,18 +3,16 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useGetAllBooksQuery } from "../redux/api/ApiSlice";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { IData } from "../redux/types";
+import { IData, IGenreYearInput } from "../redux/types";
 import SingleBook from "./SingleBook";
-import { setSearch } from "../redux/features/books/booksSlice";
-
-interface IGenreYearInput {
-  genreSelect: string;
-  yearSelect: string;
-}
+import {
+  setGenreAndYearSearch,
+  setSearch,
+} from "../redux/features/books/booksSlice";
 
 const Books = () => {
   const dispatch = useAppDispatch();
-  const { searchText } = useAppSelector((state) => state.search);
+  const { searchText, searchGenYear } = useAppSelector((state) => state.search);
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { data } = useGetAllBooksQuery(undefined, {
     refetchOnMountOrArgChange: true,
@@ -54,6 +52,22 @@ const Books = () => {
   } else {
     books = data?.data;
   }
+
+  const { genreSelect, yearSelect } = searchGenYear;
+
+  if (genreSelect !== "" || yearSelect !== "") {
+    const searchData = data?.data.filter(
+      (singleBook) =>
+        singleBook.genre?.toLowerCase() === genreSelect.toLowerCase() &&
+        singleBook.publicationDate?.includes(yearSelect)
+    );
+
+    books = searchData;
+  }
+  //  else {
+  //   books = data?.data;
+  // }
+
   // console.log([...books].reverse());
   let allBooks: IData[] = [];
   if (books !== undefined) {
@@ -68,39 +82,43 @@ const Books = () => {
 
   const onSubmit: SubmitHandler<IGenreYearInput> = (data) => {
     // await dispatch(loginUser({ email: data.email, password: data.password }));
+    dispatch(setGenreAndYearSearch(data));
     console.log(data);
   };
+
+  console.log(searchGenYear);
+  console.log(searchText);
 
   return (
     <div className="grid grid-cols-12">
       <div className="col-span-2">
         <div className="fixed">
-          {/* <form onSubmit={handleSubmit(onSubmit)}> */}
-          <select
-            // {...register("genreSelect")}
-            name="genreSelect"
-            id="genreSelect"
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            onChange={(e) => dispatch(setSearch(e.target.value))}
-          >
-            <option value="novel">Novel</option>
-            <option value="narrative">Narrative</option>
-            <option value="drama">Drama</option>
-            <option value="fiction">Fiction</option>
-          </select>
-          <select
-            // {...register("yearSelect")}
-            name="yearSelect"
-            id="yearSelect"
-            onChange={(e) => dispatch(setSearch(e.target.value))}
-          >
-            <option value="2020">2020</option>
-            <option value="2021">2021</option>
-            <option value="2022">2022</option>
-            <option value="2023">2023</option>
-          </select>
-          {/* <input type="submit" value="Submit" /> */}
-          {/* </form> */}
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <select
+              {...register("genreSelect")}
+              name="genreSelect"
+              id="genreSelect"
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+              // onChange={(e) => dispatch(setSearch(e.target.value))}
+            >
+              <option value="novel">Novel</option>
+              <option value="narrative">Narrative</option>
+              <option value="drama">Drama</option>
+              <option value="fiction">Fiction</option>
+            </select>
+            <select
+              {...register("yearSelect")}
+              name="yearSelect"
+              id="yearSelect"
+              // onChange={(e) => dispatch(setSearch(e.target.value))}
+            >
+              <option value="2020">2020</option>
+              <option value="2021">2021</option>
+              <option value="2022">2022</option>
+              <option value="2023">2023</option>
+            </select>
+            <input type="submit" value="Search" />
+          </form>
         </div>
       </div>
       <div className="col-span-10">
