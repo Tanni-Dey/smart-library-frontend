@@ -10,6 +10,7 @@ import { useAppDispatch } from "./redux/hooks";
 import { onAuthStateChanged } from "firebase/auth";
 import { setUser } from "./redux/features/user/UserSlice";
 import { auth } from "./lib/firebase";
+import Footer from "./components/Footer";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -32,6 +33,7 @@ function App() {
       <div className="pt-16">
         <Outlet />
       </div>
+      <Footer />
     </div>
   );
 }
