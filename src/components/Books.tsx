@@ -5,10 +5,7 @@ import { useGetAllBooksQuery } from "../redux/api/ApiSlice";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { IData, IGenreYearInput } from "../redux/types";
 import SingleBook from "./SingleBook";
-import {
-  setGenreAndYearSearch,
-  setSearch,
-} from "../redux/features/books/booksSlice";
+import { setGenreAndYearSearch } from "../redux/features/books/booksSlice";
 
 const Books = () => {
   const dispatch = useAppDispatch();
@@ -64,26 +61,16 @@ const Books = () => {
 
     books = searchData;
   }
-  //  else {
-  //   books = data?.data;
-  // }
 
-  // console.log([...books].reverse());
   let allBooks: IData[] = [];
   if (books !== undefined) {
     allBooks = [...books].reverse();
   }
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<IGenreYearInput>();
+  const { register, handleSubmit } = useForm<IGenreYearInput>();
 
   const onSubmit: SubmitHandler<IGenreYearInput> = (data) => {
-    // await dispatch(loginUser({ email: data.email, password: data.password }));
     dispatch(setGenreAndYearSearch(data));
-    console.log(data);
   };
 
   console.log(searchGenYear);
@@ -98,8 +85,6 @@ const Books = () => {
               {...register("genreSelect")}
               name="genreSelect"
               id="genreSelect"
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-              // onChange={(e) => dispatch(setSearch(e.target.value))}
             >
               <option value="novel">Novel</option>
               <option value="narrative">Narrative</option>
@@ -110,7 +95,6 @@ const Books = () => {
               {...register("yearSelect")}
               name="yearSelect"
               id="yearSelect"
-              // onChange={(e) => dispatch(setSearch(e.target.value))}
             >
               <option value="2020">2020</option>
               <option value="2021">2021</option>

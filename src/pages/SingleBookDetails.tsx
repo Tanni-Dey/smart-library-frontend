@@ -1,3 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   useAddReviewMutation,
@@ -18,21 +23,16 @@ interface IReview {
 const SingleBookDetails = () => {
   const { id } = useParams();
   const { user } = useAppSelector((state) => state.user);
-  const { data } = useGetSingleBookQuery(id);
+  const { data } = useGetSingleBookQuery(id as string);
   const [deleteBook] = useDeleteBookMutation();
-  const { data: bookReview } = useGetReviewsQuery(id, {
+  const { data: bookReview } = useGetReviewsQuery(id as string, {
     refetchOnFocus: true,
     pollingInterval: 3000,
   });
   const [addReview] = useAddReviewMutation();
   const navigate = useNavigate();
   const book = data?.data;
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<IReview>();
+  const { register, handleSubmit, reset } = useForm<IReview>();
 
   const onSubmit: SubmitHandler<IReview> = async (newReview) => {
     await addReview({ id: id, data: { reviews: newReview.review } });
@@ -48,21 +48,25 @@ const SingleBookDetails = () => {
       denyButtonText: "No",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const deleteData = await deleteBook(id);
-        if (deleteData?.data?.data?.acknowledged) {
-          void Swal.fire({
-            title: "Book Deleted",
-            icon: "success",
-          });
-          navigate("/");
-        } else {
-          void Swal.fire({
-            title: "Something went Wrong. Book Not Deleted",
-            icon: "error",
-            confirmButtonText: "Try Again",
-          });
+        const deleteData = await deleteBook(id as string);
+
+        if ("data" in deleteData) {
+          if (deleteData?.data?.data?.acknowledged) {
+            void Swal.fire({
+              title: "Book Deleted",
+              icon: "success",
+            });
+            navigate("/");
+          } else {
+            void Swal.fire({
+              title: "Something went Wrong. Book Not Deleted",
+              icon: "error",
+              confirmButtonText: "Try Again",
+            });
+          }
         }
       } else if (result.isDenied) {
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         Swal.fire("Changes are not saved", "", "info");
       }
     });

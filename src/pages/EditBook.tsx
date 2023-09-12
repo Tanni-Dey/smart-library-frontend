@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import {
@@ -7,6 +10,7 @@ import {
 import Swal from "sweetalert2";
 
 interface IBookInput {
+  _id: string;
   title: string;
   author: string;
   genre: string;
@@ -16,37 +20,37 @@ interface IBookInput {
 
 const EditBook = () => {
   const { id } = useParams();
-  const { data } = useGetSingleBookQuery(id, {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const { data } = useGetSingleBookQuery(id as string, {
     refetchOnFocus: true,
     pollingInterval: 3000,
   });
   const [editBook] = useEditBookMutation();
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   const book = data?.data;
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<IBookInput>();
+  const { register, handleSubmit, reset } = useForm<IBookInput>();
 
   const onSubmit: SubmitHandler<IBookInput> = async (editedBook) => {
     const editData = await editBook({ id: id, data: editedBook });
-    console.log(editData);
-    if (editData?.data?.data?.acknowledged) {
-      void Swal.fire({
-        title: "Book Edited",
-        icon: "success",
-      });
-    } else {
-      void Swal.fire({
-        title: "Something went Wrong. Book Not Edited",
-        icon: "error",
-        confirmButtonText: "Try Again",
-      });
-    }
 
-    reset();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    if ("data" in editData) {
+      if (editData?.data?.data?.acknowledged) {
+        void Swal.fire({
+          title: "Book Edited",
+          icon: "success",
+        });
+      } else {
+        void Swal.fire({
+          title: "Something went Wrong. Book Not Edited",
+          icon: "error",
+          confirmButtonText: "Try Again",
+        });
+      }
+
+      reset();
+    }
   };
 
   return (
@@ -55,6 +59,7 @@ const EditBook = () => {
         <h4 className="text-teal-400 font-bold mb-5 text-3xl text-center uppercase">
           Edit {book?.title} Book
         </h4>
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         <form onSubmit={handleSubmit(onSubmit)}>
           <input
             className="w-full border border-teal-400 p-3 rounded mb-3 focus:outline-0"
@@ -84,11 +89,6 @@ const EditBook = () => {
             type="text"
             {...register("publicationDate", { required: true })}
           />
-
-          {/* errors will return when field validation fails  */}
-
-          {/* {errors.email && <span>This field is required</span>}
-  {isError && error} */}
 
           <input
             className="bg-teal-400 rounded p-3 text-white w-full font-bold hover:bg-teal-300 focus:outline-0 focus:bg-teal-500"

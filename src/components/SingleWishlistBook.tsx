@@ -1,4 +1,3 @@
-import React from "react";
 import bookImg from "../assets/images/book1.avif";
 import { IData } from "../redux/types";
 import { useAppSelector } from "../redux/hooks";
@@ -43,6 +42,7 @@ const SingleWishlistBook = ({ book }: IProps) => {
           </button>
         ) : (
           <button
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
             onClick={handleAddToReadCompleted}
             className="bg-teal-400 rounded p-2 text-white font-semibold text-sm hover:bg-teal-300 focus:outline-0 focus:bg-teal-500 mt-2"
           >

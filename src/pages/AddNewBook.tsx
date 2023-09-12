@@ -1,11 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 
 import { SubmitHandler, useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import { usePostAddBookMutation } from "../redux/api/ApiSlice";
 import { useAppSelector } from "../redux/hooks";
-
 interface IBookInput {
+  _id: string;
   title: string;
   author: string;
   genre: string;
@@ -26,31 +27,28 @@ const AddNewBook = () => {
     return `${day}/${month}/${year}`;
   };
   const formattedDate = formatDate(date);
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<IBookInput>();
+  const { register, handleSubmit, reset } = useForm<IBookInput>();
 
   const onSubmit: SubmitHandler<IBookInput> = async (newBook) => {
     newBook.userEmail = user.email;
 
     const postData = await postAddBook(newBook);
-    console.log(newBook);
-    if (postData?.data?.data?.acknowledged) {
-      void Swal.fire({
-        title: "New Book Added",
-        icon: "success",
-      });
-    } else {
-      void Swal.fire({
-        title: "Book Not Added",
-        icon: "error",
-        confirmButtonText: "Try Again",
-      });
+
+    if ("data" in postData) {
+      if (postData?.data?.data?.insertedId !== "") {
+        void Swal.fire({
+          title: "New Book Added",
+          icon: "success",
+        });
+      } else {
+        void Swal.fire({
+          title: "Book Not Added",
+          icon: "error",
+          confirmButtonText: "Try Again",
+        });
+      }
+      reset();
     }
-    reset();
   };
 
   return (
@@ -85,11 +83,6 @@ const AddNewBook = () => {
             type="text"
             {...register("publicationDate", { required: true })}
           />
-
-          {/* errors will return when field validation fails  */}
-
-          {/* {errors.email && <span>This field is required</span>}
-      {isError && error} */}
 
           <input
             className="bg-teal-400 rounded p-3 text-white w-full font-bold hover:bg-teal-300 focus:outline-0 focus:bg-teal-500"

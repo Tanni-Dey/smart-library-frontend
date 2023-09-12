@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
@@ -17,20 +18,15 @@ interface ISearch {
 const Header = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { data } = useGetMyWishlistBooksQuery(user.email, {
     refetchOnFocus: true,
     pollingInterval: 3000,
   });
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<ISearch>();
+  const { register, handleSubmit, reset } = useForm<ISearch>();
 
   const onSubmit: SubmitHandler<ISearch> = (data): void => {
-    console.log(data);
     dispatch(setSearch(data.search));
     dispatch(setGenreAndYearSearch({ genreSelect: "", yearSelect: "" }));
     reset();
@@ -91,58 +87,6 @@ const Header = () => {
               <li className="m-3">
                 <Link to="/signup">Sign Up</Link>
               </li>
-              <li>
-                {/* <Button variant="ghost">
-              <HiOutlineSearch size="25" />
-            </Button> */}
-              </li>
-              {/* <li>
-            <Cart />
-          </li>
-          <li className="ml-5">
-            <DropdownMenu>
-              <DropdownMenuTrigger className="outline-none">
-                <Avatar>
-                  <AvatarImage src="https://github.com/shadcn.png" />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuLabel>Account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem className="cursor-pointer">
-                  Profile
-                </DropdownMenuItem>
-                <DropdownMenuItem className="cursor-pointer">
-                  Billing
-                </DropdownMenuItem>
-                <DropdownMenuItem className="cursor-pointer">
-                  Team
-                </DropdownMenuItem>
-                <DropdownMenuItem className="cursor-pointer">
-                  Subscription
-                </DropdownMenuItem>
-                {!user.email ? (
-                  <>
-                    <Link to="/login">
-                      <DropdownMenuItem className="">
-                        login
-                      </DropdownMenuItem>
-                    </Link>
-                    <Link to="/signup">
-                      <DropdownMenuItem className="">
-                        signup
-                      </DropdownMenuItem>
-                    </Link>
-                  </>
-                ) : (
-                  <DropdownMenuItem onClick={handleLogout} className="">
-                    Logout
-                  </DropdownMenuItem>
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </li> */}
             </ul>
           </div>
         </div>

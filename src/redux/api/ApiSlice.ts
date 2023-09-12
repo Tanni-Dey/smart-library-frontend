@@ -2,7 +2,9 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { IData, IResponse } from "../types";
 export const ApiSlice = createApi({
   reducerPath: "books",
-  baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:5000" }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: "https://smart-library-backend-53hj.onrender.com",
+  }),
   endpoints: (builder) => ({
     getAllBooks: builder.query<IResponse, undefined>({
       query: () => "/books",
@@ -20,7 +22,14 @@ export const ApiSlice = createApi({
       invalidatesTags: [],
     }),
     addReview: builder.mutation({
-      query: ({ id, data }: { id: string; data: { reviews: string } }) => ({
+      query: ({
+        id,
+        data,
+      }: {
+        id: string | undefined;
+        data: { reviews: string };
+      }) => ({
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         url: `/add-review/${id}`,
         method: "PUT",
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -33,7 +42,8 @@ export const ApiSlice = createApi({
       // providesTags: ["reviews"],
     }),
     editBook: builder.mutation({
-      query: ({ id, data }: { id: string; data: IData }) => ({
+      query: ({ id, data }: { id: string | undefined; data: IData }) => ({
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         url: `/edit-book/${id}`,
         method: "PUT",
         body: data,
@@ -59,7 +69,8 @@ export const ApiSlice = createApi({
       }),
     }),
     getMyWishlistBooks: builder.query({
-      query: (email: string) => `/my-wishlist/${email}`,
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      query: (email: string | null) => `/my-wishlist/${email}`,
     }),
     addToReadCompleted: builder.mutation({
       query: ({
